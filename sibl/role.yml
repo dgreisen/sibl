@@ -1,0 +1,10 @@
+tasks:
+    main.yml: ""
+handlers:
+    main.yml: ""
+templates: {}
+files: {}
+vars:
+    main.yml: ""
+meta:
+    main.yml: ""

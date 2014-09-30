@@ -1,0 +1,64 @@
+#! /usr/bin/python
+
+import click
+import yaml
+import os
+import ipdb
+
+def _get_root(path):
+    """
+    return the ansible root directory by looking up the tree for a
+    directory containing a roles dir
+    """
+#    ipdb.set_trace()
+    path = os.path.split(path)
+    while path:
+        roles_dir = os.path.join(*(path + ('roles',)))
+        if os.path.isdir(roles_dir):
+            return '/'.join(path)
+        path = path[:-1]
+    raise BaseException("not in ansible config directory")
+
+here = os.path.abspath(os.path.dirname(__file__))
+there = os.getcwd()
+
+def _create_dir_structure(path, contents):
+    """
+    recursively create directory structure. dictionary corresponds to a directory. string to a file
+    """
+    os.mkdir(path)
+    for child_path_part, child_contents in contents.items():
+        if child_path_part[0:1] == '..':
+            raise BaseException("'..' not supported by _create_dir")
+        child_path = os.path.join(path, child_path_part)
+        if isinstance(child_contents, dict):
+            _create_dir_structure(child_path, child_contents)
+        else:
+            with open(child_path, 'w') as f:
+                f.write(child_contents)
+
+def _yaml_dir_structure(dir_path, yaml_name):
+    yaml_path = os.path.join(here, "{}.yml".format(yaml_name))
+    with open(yaml_path, 'r') as f:
+        contents = yaml.load(f)
+    _create_dir_structure(dir_path, contents)
+
+@click.group()
+def sibl():
+    pass
+
+@sibl.command()
+@click.argument('role_name')
+def role(role_name):
+    root = _get_root(there)
+    role_path = os.path.join(root, 'roles', role_name)
+    _yaml_dir_structure(role_path, "role")
+
+@sibl.command()
+@click.argument('proj_name')
+def project(proj_name):
+    proj_path = os.path.join(there, proj_name)
+    _yaml_dir_structure(proj_path, 'project')
+
+if __name__ == "__main__":
+    sibl()
