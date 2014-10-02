@@ -1,0 +1,5 @@
+{{ proj_name }}:
+  group_vars: {}
+  host_vars: {}
+  roles: {}
+  playbook.yml: ""
