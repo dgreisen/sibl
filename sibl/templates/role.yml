@@ -1,12 +1,12 @@
 roles:
   {{ role_name }}:
     tasks:
-      main.yml: ""
+      main.yml: "# http://docs.ansible.com/playbooks_intro.html#tasks-list"
     handlers:
-      main.yml: ""
+      main.yml: "# http://docs.ansible.com/playbooks_intro.html#handlers-running-operations-on-change"
     templates: {}
     files: {}
     vars:
-      main.yml: ""
+      main.yml: "# docs.ansible.com/playbooks_variables.html"
     meta:
-      main.yml: ""
+      main.yml: "# http://docs.ansible.com/playbooks_roles.html#role-dependencies"

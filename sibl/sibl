@@ -46,7 +46,8 @@ def _create_dir_structure(path, contents):
             with open(child_path, 'w') as f:
                 f.write(child_contents)
 
-def _templated_yaml_dir_structure(template_name, root=there, **context):
+def _templated_yaml_dir_structure(template_name, root=None, **context):
+    root = root or _get_root(there)
     template = env.get_template('{}.yml'.format(template_name))
     dir_str = template.render(**context)
     dir_data = yaml.load(dir_str)
@@ -66,17 +67,28 @@ def sibl():
     pass
 
 @sibl.command()
-@click.argument('role_name')
-def role(role_name):
-    """ Create a new Role named 'role_name'. """
-    root = _get_root(there)
-    _templated_yaml_dir_structure('role', root, role_name=role_name)
+@click.argument('proj_name')
+def project(**kwargs):
+    """ Create a new Ansible project directory named 'proj_name'. """
+    _templated_yaml_dir_structure('project', there, **kwargs)
 
 @sibl.command()
-@click.argument('proj_name')
-def project(proj_name):
-    """ Create a new Ansible project directory named 'proj_name'. """
-    _templated_yaml_dir_structure('project', proj_name=proj_name)
+@click.argument('role_name')
+def role(**kwargs):
+    """ Create a new Role named 'role_name'. """
+    _templated_yaml_dir_structure('role', **kwargs)
+
+@sibl.command()
+@click.argument('group_name')
+def group(**kwargs):
+    """ Create a new group_vars file for a group named 'group_name'. """
+    _templated_yaml_dir_structure('group', **kwargs)
+
+@sibl.command()
+@click.argument('host_name')
+def host(**kwargs):
+    """ Create a new host_vars file for a host named 'host_name'. """
+    _templated_yaml_dir_structure('group', **kwargs)
 
 if __name__ == "__main__":
     sibl()

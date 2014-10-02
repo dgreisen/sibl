@@ -2,4 +2,4 @@
   group_vars: {}
   host_vars: {}
   roles: {}
-  playbook.yml: ""
+  playbook.yml: "# http://docs.ansible.com/playbooks_roles.html#playbook-roles-and-include-statements"

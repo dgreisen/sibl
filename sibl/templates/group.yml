@@ -1,0 +1,2 @@
+group_vars:
+  {{ group_name }}: "# docs.ansible.com/playbooks_variables.html"
